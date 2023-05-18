@@ -252,3 +252,85 @@ select at.*
 	where at.preco > 500
     order by preco
 ```
+
+## 4. COLETANDO DADOS RELACIONADOS COM OS JOINS
+    Consultar um diagrama de Venn pode ser uma boa opção.
+### 4.1 CONCEITOS
+Sejam A e B dois conjuntos distintos. Teremos que:
+### Inner Join
+* *Inner joins* retornam os **elementos de A com intersecção em B**, ou seja, elementos dos dois conjuntos que são comuns;
+* Em conjuntos, seria o equivalente à "*A intersecção B*".
+```sql
+select *
+    from TableA a
+    inner join TableB b
+    on a.pk = b.pk
+```
+* *pk* = primary key
+
+### Left Outer Join
+* *Left outer joins* retornam, normalmente, os **elementos de A e os elementos de A com intersecção em B**;
+
+
+* Existem dois tipos de resultados para a consulta:
+1. Consulta inclusiva:
+* Em conjuntos, pode ser denotado por "*(A diferença B) união (A intersecção B)*"
+```sql
+select *
+    from TableA a
+    left join TableB b
+        on a.pk = b.pk
+```
+2. Consulta exclusiva
+* Em conjuntos, pode ser denotado por "*(A diferença B)*"
+```sql
+select *
+    from TableA a
+    left join TableB b
+        on a.pk = b.pk
+    where b.pk is null
+```
+### Right Outer Join
+
+* *Right outer joins* retornam, normalmente, os **elementos de B e os elementos de B com intersecção em A**;
+
+
+* Existem dois tipos de resultados para a consulta:
+1. Consulta inclusiva:
+* Em conjuntos, pode ser denotado por "*(B diferença A) união (B intersecção A)*"
+```sql
+select *
+    from TableA a
+    right join TableB b
+        on a.pk = b.pk
+```
+2. Consulta exclusiva
+* Em conjuntos, pode ser denotado por "*(B diferença A)*"
+```sql
+select *
+    from TableA a
+    right join TableB b
+        on a.pk = b.pk
+    where a.pk is null
+```
+### Full Outer Join
+* *Full outer joins* retornam **A união B**, ou seja, todos os elementos das duas tabelas, em comum ou não.
+
+* Existem dois tipos de resultados para a consulta:
+1. Consulta inclusiva:
+* Em conjuntos, pode ser denotado por "*A união B*".
+```sql
+select *
+    from TableA a
+    full outer join TableB b
+        on a.pk = b.pk
+```
+2. Consulta exclusiva
+* Em conjuntos, pode ser denotado por "(A união B) diferença (A intersecção B)".
+```sql
+select *
+    from TableA a
+    full outer join TableB b
+        on a.pk = b.pk
+    where a.pk is null or b.pk is null
+```
