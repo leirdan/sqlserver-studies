@@ -43,6 +43,9 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
 ## 2. CRIAÇÃO DAS TABELAS COM SCRIPTS
 
 ### 2.1 PRINCIPAIS COMANDOS
+- **SELECT [Colunas] FROM [Tabela]**: permite selecionar e consultar dados em uma tabela. O comando *select* admite algumas opções, como:
+    * **WHERE**: permite filtrar dados a partir de uma condição. Pode-se utilizar ainda o operador **and** para concatenar condições de filtragem;
+    * **ORDER BY**: permite ordenar os dados a partir de uma coluna e de uma ordem específica, como ordenar uma lista em ordem alfabética, por data de cadastro e mais.
 - **CREATE TABLE [Nome da Tabela]**: cria uma nova tabela e sua estrutura;
 - **DROP TABLE [Nome da Tabela]**: apaga uma tabela existente;
 - **ALTER TABLE [Nome da Tabela]**: modifica a estrutura de uma tabela que desejar;
@@ -197,4 +200,55 @@ values (1, 1, 300, 0.1, getdate(), getdate());
     -- zayn, id 3
 insert into dbo.AlunosTurmas (ID_Turma, ID_Aluno, preco, desconto, data_cadastro, data_atualizacao) 
 values (1, 3, 300, 0.1, getdate(), getdate());
+
+-- matriculando 'Zayn Malik' na turma de 'Desenvolvendo um jogo com Javascript e HTML5'
+insert into dbo.AlunosTurmas (ID_Turma, ID_Aluno, preco, desconto, data_cadastro, data_atualizacao) 
+values (3, 3, 700, 0.2, getdate(), getdate());
+
+-- matriculando 'Ana Caetano' na turma de 'PEOO com Typescript'
+insert into dbo.AlunosTurmas (ID_Turma, ID_Aluno, preco, desconto, data_cadastro, data_atualizacao) 
+values (2, 5, 600, 0.1, getdate(), getdate());
+
+```
+
+## 3. CONSULTANDO DADOS NAS TABELAS
+### 3.1 EXEMPLOS NA TABELA "Alunos"
+### 3.1.1 Selecionando todos os dados
+```sql
+select Alunos.* from Alunos
+```
+ou
+```sql
+select * from Alunos
+```
+### 3.1.2 Selecionando somente nome, id e data de nascimento
+```sql
+-- renomeando as colunas
+select ID_Aluno as ID, nome_aluno as nome, data_nascimento as nascimento from Alunos
+```
+
+### 3.1.3 Selecionando nome e id de quem nasceu antes de 08/10/1993
+```sql
+select a.nome_aluno as nome, a.ID_Aluno as id 
+	from Alunos a 
+	where data_nascimento < '08/10/1993'
+	order by nome
+-- retorna, em ordem, George Harrison, Taylor Swift e Zayn Malik
+```
+### 3.2 EXEMPLOS NA TABELA "Turmas"
+### 3.2.1 Consultando todas as turmas
+```sql
+select Turmas.* from Turmas
+```
+### 3.2.2 Consultando o id da turma, do curso e data de início
+```sql
+-- utilizando apelido para a tabela (alias)
+select T.ID_Turma, T.data_inicio, T.ID_Curso from Turmas T
+```
+### 3.2.3 Consultando apenas turmas que cobram mais que 500 reais
+```sql
+select at.* 
+	from AlunosTurmas at
+	where at.preco > 500
+    order by preco
 ```
