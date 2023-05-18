@@ -45,7 +45,8 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
 ### 2.1 PRINCIPAIS COMANDOS
 - **SELECT [Colunas] FROM [Tabela]**: permite selecionar e consultar dados em uma tabela. O comando *select* admite algumas opções, como:
     * **WHERE**: permite filtrar dados a partir de uma condição. Pode-se utilizar ainda o operador **and** para concatenar condições de filtragem;
-    * **ORDER BY**: permite ordenar os dados a partir de uma coluna e de uma ordem específica, como ordenar uma lista em ordem alfabética, por data de cadastro e mais.
+    * **ORDER BY**: permite ordenar os dados a partir de uma coluna e de uma ordem específica, como ordenar uma lista em ordem alfabética, por data de cadastro e mais;
+    * **GROUP BY**: indica a ordem na qual as linhas serão retornadas, e também é utilizada para agrupar colunas que foram selecionadas e não têm funções de agregação sendo executadas nelas (por ex.: count, sum, etc.);
 - **CREATE TABLE [Nome da Tabela]**: cria uma nova tabela e sua estrutura;
 - **DROP TABLE [Nome da Tabela]**: apaga uma tabela existente;
 - **ALTER TABLE [Nome da Tabela]**: modifica a estrutura de uma tabela que desejar;
@@ -187,9 +188,26 @@ values (1, '22/05/2023', '22/06/2023', GETDATE(), 4);
 insert into dbo.Turmas (ID_Turma, data_inicio, data_termino, data_cadastro, ID_Curso) 
 values (2, '18/04/2023', '29/05/2023', GETDATE(), 1); 
 
--- turma do curso 'Desenvolvendo um jogo com Javascript e HTML5'
+-- 1ª turma do curso 'Desenvolvendo um jogo com Javascript e HTML5'
 insert into dbo.Turmas (ID_Turma, data_inicio, data_termino, data_cadastro, ID_Curso) 
 values (3, '05/07/2023', '20/10/2023', GETDATE(), 3);
+
+-- 2ª turma do curso 'Desenvolvendo um jogo com Javascript e HTML5'
+insert into dbo.Turmas (ID_Turma, data_inicio, data_termino, data_cadastro, ID_Curso) 
+values (4, '05/09/2023', '20/12/2023', GETDATE(), 3);
+
+-- 3ª turma do curso 'Desenvolvendo um jogo com Javascript e HTML5'
+insert into dbo.Turmas (ID_Turma, data_inicio, data_termino, data_cadastro, ID_Curso) 
+values (5, '20/01/2024', '30/04/2024', GETDATE(), 3);
+
+-- 1ª turma do curso 'Webcomponents com Javascript puro'
+insert into dbo.Turmas (ID_Turma, data_inicio, data_termino, data_cadastro, ID_Curso) 
+values (6, '01/06/2023', '30/06/2023', GETDATE(), 2);
+
+-- 2ª turma do curso 'Webcomponents com Javascript puro'
+insert into dbo.Turmas (ID_Turma, data_inicio, data_termino, data_cadastro, ID_Curso) 
+values (7, '01/07/2023', '30/07/2023', GETDATE(), 2);
+
 ```
 ### 2.3.4 Adicionando alunos em turmas
 ```sql
@@ -333,4 +351,41 @@ select *
     full outer join TableB b
         on a.pk = b.pk
     where a.pk is null or b.pk is null
+```
+
+### 4.2 EXEMPLOS
+### 4.2.1 Verificando quantas turmas há para cada curso
+```sql
+select c.ID_Curso, c.nome_curso, count(t.ID_Turma) as total_turmas
+	from Turmas t
+	inner join Cursos c
+		on t.ID_Curso = c.ID_Curso
+	group by c.nome_curso, c.ID_curso
+-- group by utilizado pois, quando há uma função de agregação, como count, é necessário que as demais colunas que não estão contidas nessa função sejam declaradas com esse comando; senão, não roda.
+```
+### 4.2.2 Verificando todos os cursos, independente se há ou não turmas
+```sql
+select c.nome_curso, count (c.ID_Curso) as total_turmas
+	from Turmas t
+	left join Cursos c
+		on c.ID_Curso = t.ID_Curso
+	group by c.nome_curso
+```
+
+### 4.2.3 Verificando a quantidade de turmas em que cada aluno está matriculado
+```sql
+select a.nome_aluno, count (at.ID_Turma) as turmas_matriculadas
+	from AlunosTurmas at
+	right join Alunos a 
+		on a.ID_Aluno = at.ID_Aluno
+	 group by nome_aluno
+
+```
+### 4.2.4 Verificando em quais turmas e cursos cada aluno está matriculado
+```sql
+select a.nome_aluno, c.nome_curso, at.preco, at.desconto, t.data_inicio, t.data_termino
+	from AlunosTurmas at
+	inner join Turmas t on t.ID_Turma = at.ID_Turma
+	inner join Cursos c on c.ID_Curso = t.ID_Curso
+	inner join Alunos a on a.ID_Aluno = at.ID_Aluno
 ```
