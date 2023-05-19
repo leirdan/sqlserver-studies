@@ -427,8 +427,8 @@ select c.nome_curso, t.ID_Turma, count (at.ID_Turma) as 'Total de turmas', count
 		on c.ID_Curso = t.ID_Curso
 	group by c.nome_curso, t.ID_Turma
 ```
-## 5. OPERAÇÕES MATEMÁTICAS
-### 5.1 FUNÇÕES PRINCIPAIS
+## 5. OPERAÇÕES
+### 5.1 FUNÇÕES PRINCIPAIS MATEMÁTICAS
 * **square(*n*)**: eleva um número ao quadrado;
 * **power(*n*, *m*)**: eleva um número n à potência m;
 * **abs(*n*)**: retorna o módulo (valor absoluto) de um número;
@@ -436,5 +436,11 @@ select c.nome_curso, t.ID_Turma, count (at.ID_Turma) as 'Total de turmas', count
 * **pi()**: retorna o número *pi*;
 * **getdate()**: retorna a data atual com horário;
 * **sign(*n*)**: retorna -1 para um número real negativo e 1 para um positivo;
+### 5.2 FUNÇÕES AGREGADAS 
 * **sum(*c*)**: soma os valores de uma coluna no SQL;
 * **count(*c.c*)**: conta o número de registros de uma coluna;
+* **avg(c)**: calcula a média de uma coluna;
+* **max(c)**: retorna o valor máximo de uma coluna;
+* **min(c)**: retorna o valor mínimo de uma coluna.
+
+
