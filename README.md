@@ -43,10 +43,14 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
 ## 2. CRIAÇÃO DAS TABELAS COM SCRIPTS
 
 ### 2.1 PRINCIPAIS COMANDOS
-- **SELECT [Colunas] FROM [Tabela]**: permite selecionar e consultar dados em uma tabela. O comando *select* admite algumas opções, como:
+- **SELECT [Colunas] FROM [Tabela]**: permite selecionar e consultar dados em uma tabela. O comando *select* admite algumas cláusulas, como:
     * **WHERE**: permite filtrar dados a partir de uma condição. Pode-se utilizar ainda o operador **and** para concatenar condições de filtragem;
     * **ORDER BY**: permite ordenar os dados a partir de uma coluna e de uma ordem específica, como ordenar uma lista em ordem alfabética, por data de cadastro e mais;
     * **GROUP BY**: indica a ordem na qual as linhas serão retornadas, e também é utilizada para agrupar colunas que foram selecionadas e não têm funções de agregação sendo executadas nelas (por ex.: count, sum, etc.);
+        * **ASC** e **DESC**: cláusulas comumente associadas à esta outra, indica se a coluna será ordenada de forma crescente ou decrescente;
+    * **IN**: define possibilidades os quais os valores de um campo pode assumir (por ex.: se sua busca quer um ID 1 ou 3, ele vai selecionar apenas os registros com esses ID's);
+    * **NOT IN**: faz o exato oposto do *in* (por ex.: se sua busca não quer um id 1 ou 3, ele vai selecionar todos os outros registros que contenham ID's diferentes);
+    * **DISTINCT**: informa à consulta que devem ser trazidos apenas valores sem repetição;
 - **CREATE TABLE [Nome da Tabela]**: cria uma nova tabela e sua estrutura;
 - **DROP TABLE [Nome da Tabela]**: apaga uma tabela existente;
 - **ALTER TABLE [Nome da Tabela]**: modifica a estrutura de uma tabela que desejar;
@@ -253,6 +257,15 @@ select a.nome_aluno as nome, a.ID_Aluno as id
 	order by nome
 -- retorna, em ordem, George Harrison, Taylor Swift e Zayn Malik
 ```
+
+### 3.1.4 Selecionando os nomes e data de nascimento de alunos que não nasceram em 1993
+```sql
+select * 
+    from Alunos 
+    where DATEPART(YEAR, data_nascimento) 
+    not in (1993)
+```
+
 ### 3.2 EXEMPLOS NA TABELA "Turmas"
 ### 3.2.1 Consultando todas as turmas
 ```sql
@@ -269,6 +282,13 @@ select at.*
 	from AlunosTurmas at
 	where at.preco > 500
     order by preco
+```
+### 3.2.4 Consultando os diferentes preços para as turmas
+```sql 
+select 
+	distinct preco	
+	from AlunosTurmas 
+	order by preco
 ```
 
 ## 4. COLETANDO DADOS RELACIONADOS COM OS JOINS
@@ -407,3 +427,14 @@ select c.nome_curso, t.ID_Turma, count (at.ID_Turma) as 'Total de turmas', count
 		on c.ID_Curso = t.ID_Curso
 	group by c.nome_curso, t.ID_Turma
 ```
+## 5. OPERAÇÕES MATEMÁTICAS
+### 5.1 FUNÇÕES PRINCIPAIS
+* **square(*n*)**: eleva um número ao quadrado;
+* **power(*n*, *m*)**: eleva um número n à potência m;
+* **abs(*n*)**: retorna o módulo (valor absoluto) de um número;
+* **sqrt(*n*)**: tira a raiz quadrada de um número n;
+* **pi()**: retorna o número *pi*;
+* **getdate()**: retorna a data atual com horário;
+* **sign(*n*)**: retorna -1 para um número real negativo e 1 para um positivo;
+* **sum(*c*)**: soma os valores de uma coluna no SQL;
+* **count(*c.c*)**: conta o número de registros de uma coluna;
