@@ -361,7 +361,9 @@ select c.ID_Curso, c.nome_curso, count(t.ID_Turma) as total_turmas
 	inner join Cursos c
 		on t.ID_Curso = c.ID_Curso
 	group by c.nome_curso, c.ID_curso
--- group by utilizado pois, quando há uma função de agregação, como count, é necessário que as demais colunas que não estão contidas nessa função sejam declaradas com esse comando; senão, não roda.
+-- group by utilizado pois, quando há uma função de agregação, como count, 
+-- é necessário que as demais colunas que não estão contidas nessa função sejam declaradas com esse comando; 
+-- se não, não roda.
 ```
 ### 4.2.2 Verificando todos os cursos, independente se há ou não turmas
 ```sql
@@ -383,9 +385,25 @@ select a.nome_aluno, count (at.ID_Turma) as turmas_matriculadas
 ```
 ### 4.2.4 Verificando em quais turmas e cursos cada aluno está matriculado
 ```sql
-select a.nome_aluno, c.nome_curso, at.preco, at.desconto, t.data_inicio, t.data_termino
+select a.ID_Aluno, a.nome_aluno, c.nome_curso, t.data_inicio, t.data_termino, at.preco, at.desconto
 	from AlunosTurmas at
-	inner join Turmas t on t.ID_Turma = at.ID_Turma
-	inner join Cursos c on c.ID_Curso = t.ID_Curso
-	inner join Alunos a on a.ID_Aluno = at.ID_Aluno
+	inner join Turmas t
+		on at.ID_Turma = t.ID_Turma
+	inner join Cursos c
+		on t.ID_Curso = c.ID_Curso
+	inner join Alunos a
+		on a.ID_Aluno = at.ID_Aluno
+```
+
+### 4.2.5 Consultando quantidade de turmas com alunos
+```sql
+select c.nome_curso, t.ID_Turma, count (at.ID_Turma) as 'Total de turmas', count (a.ID_Aluno) as 'Total de alunos nessa turma' 
+	from AlunosTurmas at
+	inner join Turmas t
+		on at.ID_Turma = t.ID_Turma
+	inner join Alunos a
+		on a.ID_Aluno = at.ID_Aluno
+	inner join Cursos c
+		on c.ID_Curso = t.ID_Curso
+	group by c.nome_curso, t.ID_Turma
 ```
