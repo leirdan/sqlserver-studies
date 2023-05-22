@@ -1,6 +1,9 @@
 # SQL SERVER
 Repositório criado para estudar SQL Server, com comandos e explicações acerca deste SGBD.
 ## 1. MODELAGEM DO BANCO DE DADOS
+* Um banco de dados SQL Server é composto de tabelas, visões (representação visual de tabelas), *procedures* e *functions* (ambas criadas utilizando uma linguagem própria do SQL Server, a **Transact SQL**, mais complexa que a SQL ANSI comum) e *triggers* (comandos a serem executados quando determinada condição for atingida no banco de dados).
+* Comumente, cada tabela tem um campo (coluna) que é a **chave primária** daquela tabela. A chave primária (ou *pk*) nada mais é que um valor único que não pode se repetir em outros campos da mesma tabela, e pode ser referenciada na forma de **chave estrangeira** em outra tabela para formar uma relação entre as duas.  
+* Neste repositório, será criada uma database de exemplo com algumas tabelas para exemplificar o funcionamento do SQL Server. O banco de dados se refere a uma situação de venda de cursos online com alunos diversos.
 ### TABELAS
 ### 1.1 ALUNOS
     Usada para registrar alunos do curso.
@@ -42,7 +45,22 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
 - nome_situacao;
 ## 2. CRIAÇÃO DAS TABELAS COM SCRIPTS
 
+* Para se criar um banco de dados SQL Server, podemos utilizar do comando **create database** e passar alguns parâmetros para o mesmos. Veja o comando de criação:
+    ```sql
+    CREATE DATABASE [SQL_TURMAS]
+    CONTAINMENT = NONE
+    ON  PRIMARY 
+    ( NAME = N'SQL_TURMAS', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLANDRIEL\MSSQL\DATA\SQL_TURMAS.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+    LOG ON 
+    ( NAME = N'SQL_TURMAS_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLANDRIEL\MSSQL\DATA\SQL_TURMAS_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+    WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+    GO
+    ```
+
 ### 2.1 PRINCIPAIS COMANDOS
+
+#### Data Definition Language (DDL)
+* Comandos que criam os componentes dos bancos de dados e fazem a manutenção.
 - **SELECT [Colunas] FROM [Tabela]**: permite selecionar e consultar dados em uma tabela. O comando *select* admite algumas cláusulas, como:
     * **WHERE**: permite filtrar dados a partir de uma condição. Pode-se utilizar ainda o operador **and** para concatenar condições de filtragem;
     * **ORDER BY**: permite ordenar os dados a partir de uma coluna e de uma ordem específica, como ordenar uma lista em ordem alfabética, por data de cadastro e mais;
@@ -51,14 +69,64 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
     * **IN**: define possibilidades os quais os valores de um campo pode assumir (por ex.: se sua busca quer um ID 1 ou 3, ele vai selecionar apenas os registros com esses ID's);
     * **NOT IN**: faz o exato oposto do *in* (por ex.: se sua busca não quer um id 1 ou 3, ele vai selecionar todos os outros registros que contenham ID's diferentes);
     * **DISTINCT**: informa à consulta que devem ser trazidos apenas valores sem repetição;
+- **TRUNCATE [Nome da Tabela]**: apaga os dados de uma tabela mas não sua modelagem;
 - **CREATE TABLE [Nome da Tabela]**: cria uma nova tabela e sua estrutura;
 - **DROP TABLE [Nome da Tabela]**: apaga uma tabela existente;
 - **ALTER TABLE [Nome da Tabela]**: modifica a estrutura de uma tabela que desejar;
+
+#### Data Manipulation Language (DML)
+* Comandos que gerenciam os dados das tabelas.
+- **INSERT INTO [Nome da Tabela] (campos da tabela) VALUES (valores)**: insere dados em uma tabela e suas colunas;
+- **UPDATE [Nome da Tabela] SET [Campo = 'novo valor'] WHERE [Condição]**: atualiza um registro em uma tabela a partir da cláusula *where* para identificar o registro.
+- **DELETE FROM [Nome da Tabela] WHERE [Condição]**: exclui um ou mais registros com base na cláusula *where* utilizada para identificar o(s) registro(s).
 - **ADD CONSTRAINT [Nome da Restrição] [Tipo da Restrição]**: cria uma constraint em uma tabela para, por exemplo, definir suas chaves estrangeiras;
 - **DROP CONSTRAINT [Nome da Restrição]**: exclui uma restrição previamente criada;
-- **INSERT INTO [Nome da Tabela] (campos da tabela) VALUES (valores)**: insere dados em uma tabela e suas colunas;
 
-### 2.1.1 Tabela "Alunos"
+#### Data Control Language (DCL)
+* Comandos que gerenciam não a estrutura do banco mas sim informações relacionadas à sua segurança e forma de armazenar dados.
+- **SAVEPOINT**: salva o estado do banco de dados de forma temporária;
+- **ROLLBACK**: retorna ao estado do banco salvo anteriormente; 
+- **COMMIT**: salva o estado do banco de dados de forma definitiva;
+
+### 2.1.1 Tipos de dados numéricos em SQL Server
+#### a) Numéricos Exatos
+* Os numéricos exatos são números inteiros, ou seja, que não possuem casas decimais. No SQL Server, temos 4 tipos de números exatos inteiros, diferenciados pelo limite do valor mínimo ou máximo que pode ser armazenado dentro da tabela. O limite mínimo e máximo está relacionado ao número de bytes que cada um ocupa dentro do campo.
+
+    * *bigint*: varia de -2^63 a 2^63-1 e ocupa 8 bytes;
+    * *int*: varia de -2^31 a 2^31-1 e ocupa 4 bytes;
+    * *smallint*: varia de -2^15 a 2^15-1 e ocupa 2 bytes;
+    * *tinyint*: varia de 0 a 255 e ocupa 1 byte.
+
+#### b) Numéricos com casas decimais
+* Estes numéricos são números com casas decimais previamente definidas. Ao criar um campo desse tipo, temos que definir a *precisão* (P, o número de casas digitais que o número terá, incluindo casas decimais) e a *escala* (S, representa somente a quantidade de números decimais); assim, nota-se que o valor da escala não pode ser nunca maior que o da precisão. São estes os tipos:
+    * *numeric* e *decimal*: funcionam da mesma forma, então não há diferença ao criá-los.
+
+#### c) Numéricos Exatos (unidades monetárias)
+* Estes são valores que representam o dinheiro, e a diferença entre os tipos é basicamente o seu alcance de valores. São eles:
+    * *smallmoney*: -214.748.3648 a 214.748.3647 e ocupa 4 bytes;
+    * *money*: -922.337.203.685.477,5808 a 922.337.203.685.477,5807 e ocupa 8 bytes;
+#### d) Numéricos lógicos
+* Ao contrário das linguagens de programação, no SQL Server não há um tipo *booleano*, mas sim um tipo chamado *BIT*.
+    * *BIT*: recebe um valor 0, que representa *false*, ou 1, que representa *true*. Como é um bit, ele ocupa o espaço de 1 bit.
+#### e) Numéricos aproximados
+* Valores numéricos onde não precisamos definir a quantidade de casas decimais, pois este é um processo executado internamente pelo banco de dados. Temos:
+    * *real*: -3,40E+38 a -1.18E-38. 0 e 1.18E-38 a 3,40E+38, e ocupa 4 bytes;
+    * *float*: - 1,79E+308 a -2,23E-308,0 e 2,23E-308 a 1.79E+308, e ocupa um valor variável de memória.
+        * *float* é o tipo com maior intervalo de números, mas, mesmo assim, ele ainda tem um limite máximo de valores.
+
+### 2.1.2 Tipos de datas em SQL Server
+#### a) Date
+* O tipo *date* representa uma data simples no formato *YYYY-MM-DD*, podendo ir do dia 01 do mês 01 do ano 0001 até 31 do mês 12 do ano 9999.
+#### b) Datetime
+* Além de armazenar a data, armazena também a hora corrente no formato *YYYY-MM-DD HH:MM:SS.MMM*. Um detalhe é que o intervalo de anos só vai de 1753 a 9999.
+#### c) Datetime2
+* Bastante similar ao *Datetime* anterior, a principal diferença está no intervalo dos anos, que vai do ano 01 até o ano 9999. De resto, é exatamente igual ao Datetime.
+#### d) Smalldate
+* Tipo de *Datetime* que não representa segundos e microssegundos, somente horas e minutos, além da data. O intervalo em anos é de 1900 a 2079, e é escrito no formato *YYYY-MM-DD HH:MM:SS*, onde o campo dos segundos (SS) será sempre 00.
+#### e) Time
+* Tipo que representa somente horas, portanto, permite uma precisão maior de microssegundos, e é escrito no formato *HH:MM:SS.MMMMM*.
+
+ ### 2.2.1 Tabela "Alunos"
 
 ```sql
 create table Alunos (
@@ -69,7 +137,7 @@ create table Alunos (
     data_atualizacao datetime
 );
 ```
-### 2.1.2 Tabela "Cursos"
+### 2.2.2 Tabela "Cursos"
 ```sql
 create table Cursos (
     ID_Curso int primary key not null,
@@ -79,7 +147,7 @@ create table Cursos (
 );
 ```
 
-### 2.1.3 Tabela "Turmas"
+### 2.2.3 Tabela "Turmas"
 ```sql
 create table Turmas (
     ID_Turma int primary key not null,
@@ -89,7 +157,7 @@ create table Turmas (
     ID_Curso int not null,
 );
 ```
-#### 2.1.3.1 Tabela auxiliar do relacionamento many-to-many entre turmas e alunos: Alunos_Turma
+#### 2.2.3.1 Tabela auxiliar do relacionamento many-to-many entre turmas e alunos: Alunos_Turma
 * A necessidade disto se dá pois haveria uma infinidade de ID_Turma replicados na tabela de Turmas para cada aluno matriculado nela.
 ```sql
 create table AlunosTurmas (
@@ -102,7 +170,7 @@ create table AlunosTurmas (
 );
 ```
 
-### 2.1.4 Tabela "Presenças"
+### 2.2.4 Tabela "Presenças"
 ```sql
 create table Presencas (
 	data_presenca date not null,
@@ -112,7 +180,7 @@ create table Presencas (
 	ID_Situacao int not null
 );
 ```
-### 2.1.5 Tabela "Situação"
+### 2.2.5 Tabela "Situação"
 ```sql
 create table Situacao (
     ID_Situacao int primary key not null,
@@ -120,16 +188,16 @@ create table Situacao (
 );
 ```
 
-### 2.2. CRIANDO RELACIONAMENTOS COM CONSTRAINTS
+### 2.3. CRIANDO RELACIONAMENTOS COM CONSTRAINTS
 * *Constraints* nada mais são que "restrições" as quais sua tabela deve obedecer.
 
-### 2.2.1 Relacionamentos de "Turmas"
+### 2.3.1 Relacionamentos de "Turmas"
 ```sql
 alter table Turmas
     add constraint fk_Cursos FOREIGN KEY (ID_Curso) references Cursos (ID_Curso);
 ```
 
-### 2.2.2 Relacionamentos de "Presencas"
+### 2.3.2 Relacionamentos de "Presencas"
 ```sql
 alter table Presencas 
 	add constraint fk_TurmasPresenca FOREIGN KEY (ID_Turma) references Turmas(ID_Turma);
@@ -140,7 +208,7 @@ alter table Presencas
 alter table Presencas 
 	add constraint fk_SituacaoPresenca FOREIGN KEY (ID_Situacao) references Situacao (ID_Situacao);
 ```
-### 2.2.3 Relacionamentos de "AlunosTurmas"
+### 2.3.3 Relacionamentos de "AlunosTurmas"
 ```sql
 alter table AlunosTurmas 
     add constraint fk_Turmas foreign key (ID_Turma) references Turmas (ID_Turma);
