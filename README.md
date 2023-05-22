@@ -126,6 +126,22 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
 #### e) Time
 * Tipo que representa somente horas, portanto, permite uma precisão maior de microssegundos, e é escrito no formato *HH:MM:SS.MMMMM*.
 
+### 2.1.3 Tipos de textos em SQL Server
+#### a) Cadeia de caracteres - representa textos: Char e Varchar
+* O tipo *char* é um tipo textual que possui um tamanho fixo definido, o que significa que, em um campo de 10 letras, caso apenas 5 sejam preenchidas, o banco de dados irá guardar o registro como essas 5 letras inseridas e mais 5 espaços em branco para ocupar o número de caracteres definidos. Pode ocupar até 8000 bytes.
+* O tipo *varchar* é similar ao *char*. No entanto, seu tamanho é variável, pois na mesma situação acima e com um campo do tipo *varchar*, o banco de dados não preencheria o restante do registro com espaços em brancos, mas armazenaria mesmo com 5 letras. Este tipo também ocupa até 8000 bytes, entretanto, é possível defini-lo como *MAX*, o que significa que ele pode armazenar até 2 gigabytes de texto!
+
+#### b) Cadeia de caracteres Unicode - representa os textos usando a tabela UTF-16: NChar e NVarchar
+* Os tipos *nchar* e *nvarchar* são usados para representar caracteres Unicode, que utiliza um grupo de símbolos maior que os presentes nos tipos *char* e *varchar*, como letras de outros alfabetos. Desse modo, *nchar* e *nvarchar* são tipos bem parecidos com os seus equivalentes, incluindo o valor *MAX* em *nvarchar*.
+
+#### c) Cadeia de caracteres binários: Binary e Varbinary
+* Estes dois tipos funcionam da mesma forma que *char* e *varchar*, porém, são utilizados para representar bytes de arquivos escritos em binário. Ambos variam de 0 a 8000 bytes e *varbinary* tem a mesma possibilidade que *varchar* de utilizar o valor *MAX*.
+
+### 2.1.4 Outros tipos
+* **XML**: este tipo guarda o conteúdo de arquivos XML;
+* **Geometria Espacial**: representa um sistema de coordenadas euclidianas e relaciona-se com símbolos geométricos;
+* **Geográficos espaciais**: representam pontos, linhas e áreas associadas a mapas, podendo, por exemplo, gravar rotas em mapas.
+
  ### 2.2.1 Tabela "Alunos"
 
 ```sql
