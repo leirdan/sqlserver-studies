@@ -443,4 +443,44 @@ select c.nome_curso, t.ID_Turma, count (at.ID_Turma) as 'Total de turmas', count
 * **max(c)**: retorna o valor máximo de uma coluna;
 * **min(c)**: retorna o valor mínimo de uma coluna.
 
+### 5.3 FUNÇÕES DE DATA
+* **getdate()**: retorna a data corrente no formato norte-americano;
+* **convert()**: converte um valor de um tipo para outro. Pode ser utilizado em datas da seguinte forma:
+    ```sql
+    select convert(char, getdate(), 113)
+    -- 19 Mai 2023 11:31:44.100
+    ```
+    * Os formatos para data (113, 103, 1, etc.) estão disponíveis na tabela *ANSI SQL*.
+* **day(*v*)**: retorna o dia de um valor *v* em formato de data:
+    ```sql
+    select day(getdate())
+    -- 19
+    ```
+* **month(*v*)**: retorna o mês de um valor *v* em formato de data: 
+    ```sql
+    select month(getdate())
+    -- 05
+    ```
+* **year(*v*)**: retorna o ano de um valor *v* em formato de data: 
+    ```sql
+    select year(getdate())
+    -- 2023
+    ```
+* **dateadd(*t*, *v*, *d*)**: permite alterar e manipular um valor de data, onde 't' é o tipo do valor a ser adicionado, 'v' é o valor em si e 'd' é onde será adicionado:
+    ```sql
+    select dateadd(year, -3, getdate())
+    -- 2020-05-19 11:47:37.387 
+    -- saímos de 2023 para 2020
+
+    select convert(smalldatetime, dateadd(hour, 4, getdate()))
+    -- 2023-05-19 15:55:00
+    -- adicionamos 4h na hora corrente (11:55:00) e convertemos para smalldatetime
+    ```
+
+* **datediff(*t*, *v*, *d*)**: permite calcular a diferença entre duas datas:  
+    ```sql
+    select datediff(month, getdate(), dateadd(year, 4, getdate()))
+    -- 48
+    -- usamos o dateadd para adicionar 4 anos na data atual, e calcular essa data do dateadd com a data atual em meses, gerando 48 meses (que é igual a 4 anos).
+    ```
 
