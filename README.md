@@ -628,3 +628,29 @@ select c.nome_curso, t.ID_Turma, count (at.ID_Turma) as 'Total de turmas', count
     * fase **begin transaction**: ao acrescentarmos operações, códigos e arquivos neste projeto na nossa máquina, estamos criando um novo estado para esse projeto, **mas que ainda não foi registrado no repositório remoto** e, portanto, nenhum outro desenvolvedor ainda tem acesso ao seu novo código;
     * fase **commit**: se fizermos um **git commit**, significa que estaremos atualizando o estado do projeto, onde **todos os outros desenvolvedores poderão ter acesso ao seu código**;
     * fase **rollback**: entretanto, se executarmos um **git reset** ou um **git revert** neste projeto, retornaremos o projeto a um estado específico, descartando os commits feitos durante este processo.
+
+## 7. TRIGGERS/GATILHOS
+* Um *trigger* é um procedimento especial do SQL Server que é ativado automaticamente quando determinado evento ocorrer dentro do banco de dados. Por exemplo, ao inserir um registro em uma tabela, um trigger pode ser acionado e inserir, em outra tabela de *logs*, uma mensagem contendo detalhes dessa inserção.
+* Para definir um trigger, usamos:
+```sql
+CREATE TRIGGER [Nome do gatilho]
+ON [Tabela-alvo]
+[FOR/AFTER/INSTEAD OF] [INSERT/UPDATE/DELETE]
+AS
+BEGIN
+[Corpo do Gatilho]
+END
+```
+* Componentes da trigger:
+    * **for**: trigger será executada *simultaneamente* ao comando na tabela;
+    * **after**: trigger será executada *logo após* ao comando na tabela;
+    * **instead of**: trigger será executada *no lugar* do comando na tabela;
+    * **begin - end**: espaço onde os comandos da trigger serão executados.
+
+## 8. CHECK
+* O *check* é uma funcionalidade do SQL Server que é uma restrição onde criamos um limite para o campo que está sendo criado na tabela.
+* Por exemplo, vamos adicionar uma restrição na tabela de Alunos onde nenhum aluno pode ter menos que 18 anos para se inscrever em um curso.
+```sql
+alter table Alunos
+	add constraint CHK_IDADE CHECK ((YEAR(getdate()) - YEAR(data_nascimento)) >= 18)
+```
