@@ -589,3 +589,14 @@ select c.nome_curso, t.ID_Turma, count (at.ID_Turma) as 'Total de turmas', count
     -- usamos o dateadd para adicionar 4 anos na data atual, e calcular essa data do dateadd com a data atual em meses, gerando 48 meses (que é igual a 4 anos).
     ```
 
+## 6. TRANSAÇÕES, COMMIT E ROLLBACK
+* Uma transação no SQL Server é uma *unidade lógica de processamento* que tem por objetivo preservar a consistência e integridade dos dados, ou seja, permite ao usuário salvar o estado atual do banco de dados como uma versão que pode ser recuperada posteriormente.
+* Quando queremos iniciar uma transação, devemos utilizar a expressão **begin transaction**. Tal comando salva, temporariamente, o estado atual do banco de dados, e nenhum outro usuário pode, durante esse momento, consultar a tabela que está sob esse efeito.
+* Para confirmar as operações realizadas e salvar o estado atual do banco de dados de forma definitiva, utiliza-se o comando **commit**. Então, outros usuários vão poder acessar a tabela com as novas modificações.
+* Para ignorar as operações que foram realizadas após o *begin transaction* e retornar ao ponto onde executamos esse comando, utilizamos o comando **rollback**, que desfaz essas operações e retorna ao "checkpoint" do database. Então, outros usuários vão poder acessar a tabela da forma que ela estava antes.
+
+* Para fins didáticos, tais comandos funcionam de forma similar ao **git** e GitHub: 
+    * em um repositório do GitHub, podemos ter um projeto em uma versão 1.0; 
+    * fase **begin transaction**: ao acrescentarmos operações, códigos e arquivos neste projeto na nossa máquina, estamos criando um novo estado para esse projeto, **mas que ainda não foi registrado no repositório remoto** e, portanto, nenhum outro desenvolvedor ainda tem acesso ao seu novo código;
+    * fase **commit**: se fizermos um **git commit**, significa que estaremos atualizando o estado do projeto, onde **todos os outros desenvolvedores poderão ter acesso ao seu código**;
+    * fase **rollback**: entretanto, se executarmos um **git reset** ou um **git revert** neste projeto, retornaremos o projeto a um estado específico, descartando os commits feitos durante este processo.
