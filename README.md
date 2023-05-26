@@ -78,7 +78,16 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
 * Comandos que gerenciam os dados das tabelas.
 - **INSERT INTO [Nome da Tabela] (campos da tabela) VALUES (valores)**: insere dados em uma tabela e suas colunas;
 - **UPDATE [Nome da Tabela] SET [Campo = 'novo valor'] WHERE [Condição]**: atualiza um registro em uma tabela a partir da cláusula *where* para identificar o registro.
-- **DELETE FROM [Nome da Tabela] WHERE [Condição]**: exclui um ou mais registros com base na cláusula *where* utilizada para identificar o(s) registro(s).
+- **DELETE FROM [Nome da Tabela] WHERE [Condição]**: exclui um ou mais registros com base na cláusula *where* utilizada para identificar o(s) registro(s);
+- **MERGE**: faz alterações em uma tabela com base em outra. Este comando é um *mix* de outros comandos, como *joins* e *updates*, e funciona da seguinte maneira:
+    ```sql
+    MERGE INTO TABLE_A A -- nome da tabela a modificar
+    USING TABLE_B B -- tabela de referência
+    ON A.KEY = B.KEY -- conexão das tabelas por meio de uma chave em comum 
+    WHEN MATCHED THEN
+    UPDATE SET A.FIELD = B.FIELD
+    -- quando der 'match', atualize o campo A com os dados do campo B
+    ```
 - **ADD CONSTRAINT [Nome da Restrição] [Tipo da Restrição]**: cria uma constraint em uma tabela para, por exemplo, definir suas chaves estrangeiras;
 - **DROP CONSTRAINT [Nome da Restrição]**: exclui uma restrição previamente criada;
 
@@ -315,6 +324,18 @@ values (3, 3, 700, 0.2, getdate(), getdate());
 insert into dbo.AlunosTurmas (ID_Turma, ID_Aluno, preco, desconto, data_cadastro, data_atualizacao) 
 values (2, 5, 600, 0.1, getdate(), getdate());
 
+```
+
+### 2.4 ALTERANDO E REMOVENDO DADOS
+### 2.4.1 Modificando o nome do curso com ID 1
+```sql
+update Cursos set nome_curso = 'Programação Funcional com Haskell' where id_curso = 1
+```
+### 2.4.2 Desmatriculando Zayn Malik da turma de FMC I
+```sql
+delete from AlunosTurmas where ID_Turma = 1 and ID_Aluno = 3
+-- ID_Turma 1 = FMC I
+-- ID_Aluno 3 = Zayn Malik
 ```
 
 ## 3. CONSULTANDO DADOS NAS TABELAS
