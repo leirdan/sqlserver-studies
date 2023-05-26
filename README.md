@@ -149,8 +149,13 @@ Repositório criado para estudar SQL Server, com comandos e explicações acerca
 ### 2.1.4 Outros tipos
 * **XML**: este tipo guarda o conteúdo de arquivos XML;
 * **Geometria Espacial**: representa um sistema de coordenadas euclidianas e relaciona-se com símbolos geométricos;
-* **Geográficos espaciais**: representam pontos, linhas e áreas associadas a mapas, podendo, por exemplo, gravar rotas em mapas.
+* **Geográficos espaciais**: representam pontos, linhas e áreas associadas a mapas, podendo, por exemplo, gravar rotas em mapas;
 
+### 2.1.5 Auto incremento e padrões
+* **Identity**: campo numérico inteiro especial do SQL Server que refere-se ao **auto incremento**, amplamente utilizado para criar de forma automática identificadores para cada registro de uma tabela. No SQL Server, definimos o valor inicial e também o incremento dele a cada registro; além disso, não é necessário especificar o campo de tipo Identity nos comandos de *insert into*.
+* **Default**: comando que especifica um valor padrão para um campo caso ele não seja preenchido. Exemplos comuns incluem campos de identificação (atrelados ao uso do tipo Identity) e campos de data.
+    * Observação: um campo que tem um valor default pode, como deixado explícito acima, ser preenchido com outro valor com o *insert into*.
+### 2.2 CÓDIGOS DAS TABELAS
  ### 2.2.1 Tabela "Alunos"
 
 ```sql
@@ -204,13 +209,36 @@ create table Presencas (
 	ID_Turma int not null,
 	ID_Situacao int not null
 );
-```
+``` 
 ### 2.2.5 Tabela "Situação"
 ```sql
 create table Situacao (
     ID_Situacao int primary key not null,
     nome_situacao varchar(250) not null
 );
+```
+
+### 2.2.6 Alterando campos de datetime
+Percebemos, durante a manipulação do banco de dados, que os campos de *data_cadastro* e _data_atualizacao_ poderiam ter valores padrão, ao invés de toda vez ter que digitá-los. Por isso, ocorreram as seguintes alterações:
+```sql
+-- tabela de alunos
+alter table Alunos 
+	add constraint df_data_cadastro_alunos default getdate() for data_cadastro;
+alter table Alunos 
+	add constraint df_data_atualizacao_alunos default getdate() for data_atualizacao;
+-- tabela de cursos
+alter table Cursos 
+	add constraint df_data_cadastro_cursos default getdate() for data_cadastro;
+alter table Cursos 
+	add constraint df_data_atualizacao_cursos default getdate() for data_atualizacao;
+-- tabela de turmas
+alter table Turmas 
+	add constraint df_data_cadastro_turmas default getdate() for data_cadastro;
+-- tabela de alunos-turmas
+alter table AlunosTurmas 
+	add constraint df_data_cadastro_at default getdate() for data_cadastro;
+alter table AlunosTurmas 
+	add constraint df_data_atualizacao_at default getdate() for data_atualizacao;
 ```
 
 ### 2.3. CRIANDO RELACIONAMENTOS COM CONSTRAINTS
